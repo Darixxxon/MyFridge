@@ -20,8 +20,6 @@ class Fridge(models.Model):
         on_delete=models.CASCADE,
         related_name='fridges',
         related_query_name='fridge',
-        null=True,
-        blank=True,
         help_text='User who owns the fridge',
     )
 
