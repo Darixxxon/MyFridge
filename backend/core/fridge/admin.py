@@ -7,11 +7,10 @@ from .models import Fridge
 @admin.register(Fridge)
 class FridgeAdmin(admin.ModelAdmin):
     """
-        Admin class for the Fridge model.
+    Admin class for the Fridge model.
     """
 
     list_display = ("name", "owner")
     search_fields = ("name", "owner__username")
     list_filter = ("owner",)
-    ordering = ("name",)
 

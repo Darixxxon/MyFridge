@@ -5,13 +5,13 @@ from django.contrib.auth.models import User
 
 class Fridge(models.Model):
     """
-        Fridge model
-        Relationships:
-        - Many-to-One with User (Foreign key)
+    Fridge model
+    Relationships:
+    - Many-to-One with User (Foreign key)
     """
 
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
