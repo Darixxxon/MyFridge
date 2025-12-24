@@ -24,17 +24,29 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Run Django checks
-        run: |
-          cd backend/core
-          python manage.py check
+        working-directory: backend/core
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: "True"
+          DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+
+        run: python manage.py check
 
       - name: Run migrations
-        run: |
-          cd backend/core
-          python manage.py migrate
+        working-directory: backend/core
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: "True"
+          DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+
+        run: python manage.py migrate
 
       - name: Run tests
-        run: |
-          cd backend/core
-          python manage.py test
-          
+        working-directory: backend/core
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: "True"
+          DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+
+        run: python manage.py test
+
