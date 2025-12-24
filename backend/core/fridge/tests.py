@@ -17,7 +17,7 @@ class FridgeModelTest(TestCase):
     def test_fridge_create(self):
         self.assertEqual(Fridge.objects.count(), 1)
 
-    def test_fridge_deleted_with_owner(self):
+    def test_fridge_is_deleted_with_owner(self):
         self.user.delete()
         self.assertEqual(Fridge.objects.count(), 0)
 
