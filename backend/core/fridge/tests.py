@@ -67,7 +67,12 @@ class ProductModelTest(TestCase):
 
     def test_measurement_must_be_positive(self):
         product = Product(**self.product_data)
-        product.measurement = Decimal("-1.00")
+        product.measurement = Decimal("0.01")
+        product.full_clean()
+
+    def test_measurement_cannot_be_nonpositive(self):
+        product = Product(**self.product_data)
+        product.measurement = Decimal("0")
         with self.assertRaises(ValidationError):
             product.full_clean()
 
@@ -77,7 +82,7 @@ class ProductModelTest(TestCase):
         with self.assertRaises(ValidationError):
             product.full_clean()
 
-    def test_invalid_unit(self):
+    def test_unit_required(self):
         product = Product(**self.product_data)
         product.unit = ""
         with self.assertRaises(ValidationError):
@@ -86,6 +91,12 @@ class ProductModelTest(TestCase):
     def test_barcode_required(self):
         product = Product(**self.product_data)
         product.barcode = ""
+        with self.assertRaises(ValidationError):
+            product.full_clean()
+
+    def test_valid_unit(self):
+        product = Product(**self.product_data)
+        product.unit = "invalid unit"
         with self.assertRaises(ValidationError):
             product.full_clean()
 
