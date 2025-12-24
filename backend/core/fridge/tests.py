@@ -44,6 +44,7 @@ class FridgeModelTest(TestCase):
             "Fridge Test Fridge"
         )
 
+
 class ProductModelTest(TestCase):
     def setUp(self):
         self.product_data = {
@@ -94,7 +95,7 @@ class ProductModelTest(TestCase):
         with self.assertRaises(ValidationError):
             product.full_clean()
 
-    def test_valid_unit(self):
+    def test_invalid_unit_rejected(self):
         product = Product(**self.product_data)
         product.unit = "invalid unit"
         with self.assertRaises(ValidationError):

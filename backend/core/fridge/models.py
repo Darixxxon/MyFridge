@@ -35,6 +35,7 @@ class Fridge(models.Model):
     def __str__(self):
         return f"Fridge {self.name}"
 
+
 class Product(models.Model):
     """
     Product model
