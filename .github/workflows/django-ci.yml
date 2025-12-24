@@ -25,13 +25,16 @@ jobs:
 
       - name: Run Django checks
         run: |
-          python backend/core/manage.py check
+          cd backend/core
+          python manage.py check
 
       - name: Run migrations
         run: |
-          python backend/core/manage.py migrate
+          cd backend/core
+          python manage.py migrate
 
       - name: Run tests
         run: |
-          python backend/core/manage.py test
+          cd backend/core
+          python manage.py test
           
