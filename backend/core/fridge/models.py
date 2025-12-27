@@ -103,3 +103,33 @@ class FridgeItem(models.Model):
 
     def __str__(self):
         return f"Item {self.product.name} in fridge {self.fridge.name}"
+
+
+class FridgeMembers(models.Model):
+    """
+    Fridge Members model
+    """
+
+    ROLES = [
+        ("a", "Admin"),
+        ("m", "Member"),
+    ]
+
+    role = models.CharField(max_length=5, choices=ROLES, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    fridge = models.ForeignKey(
+        Fridge,
+        on_delete=models.CASCADE,
+        related_name='memberships',
+        related_query_name='membership',
+        help_text='Membership to fridge',
+    )
+
+    member = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='members',
+        related_query_name='member',
+        help_text='User is the member',
+    )
