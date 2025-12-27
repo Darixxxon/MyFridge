@@ -65,3 +65,47 @@ class Product(models.Model):
 
     def __str__(self):
         return f"Product {self.name} with barcode {self.barcode}"
+
+
+class FridgeItem(models.Model):
+    """
+    Specified item in fridge
+    Relationships:
+    - Many-to-One with Fridge (Foreign key)
+    - Many-to-One with Product (Foreign key)
+    """
+
+    expiration_date = models.DateTimeField(blank=True, null=True)
+    quantity = models.DecimalField(default=1, decimal_places=2, max_digits=10, validators=[MinValueValidator(Decimal("0.01"))])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    fridge = models.ForeignKey(
+        Fridge,
+        on_delete=models.CASCADE,
+        related_name='items',
+        related_query_name='item',
+        help_text='Fridge inside which is the item',
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='fridge_items',
+        related_query_name='fridge_item',
+        help_text='Product f which type is the item'
+    )
+
+    class Meta:
+        ordering = ('product__name',)
+        verbose_name = 'Fridge Item'
+        verbose_name_plural = 'Fridge Items'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['fridge', 'product'],
+                name='unique_product_in_fridge'
+            )
+        ]
+
+    def __str__(self):
+        return f"Item {self.product.name} in fridge {self.fridge.name}"

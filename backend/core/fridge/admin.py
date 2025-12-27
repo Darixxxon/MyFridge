@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Fridge, Product
+from .models import Fridge, Product, FridgeItem
 
 
 # Register your models here.
@@ -23,3 +23,13 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "brand", "measurement", "unit", "barcode")
     search_fields = ("name", "brand", "barcode")
     list_filter = ("brand",)
+
+@admin.register(FridgeItem)
+class FridgeItemAdmin(admin.ModelAdmin):
+    """
+    Admin class for the FridgeItem model.
+    """
+
+    list_display = ("fridge__name", "product__name", "quantity", "expiration_date")
+    search_fields = ("fridge__name", "product__name"),
+    list_filter = ("fridge__name",)
