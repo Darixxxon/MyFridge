@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from .models import Fridge, Product
+from .models import Fridge, Product, FridgeItem
 
 
 class FridgeModelTest(TestCase):
@@ -110,3 +110,83 @@ class ProductModelTest(TestCase):
     def test_product_str(self):
         product = Product.objects.create(**self.product_data)
         self.assertEqual(str(product), "Product Test Product with barcode 1234567890123")
+
+
+class FridgeItemModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="test123",
+        )
+
+        self.fridge = Fridge.objects.create(
+            name="Test Fridge",
+            owner=self.user
+        )
+
+        self.product = Product.objects.create(
+            name="Test Product",
+            brand="Test Brand",
+            measurement=Decimal("1.00"),
+            unit="l",
+            barcode="1234567890123"
+        )
+
+    def test_create_valid_item(self):
+        FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        self.assertEqual(FridgeItem.objects.count(), 1)
+
+    def test_delete_item(self):
+        item = FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        item.delete()
+        self.assertEqual(FridgeItem.objects.count(), 0)
+
+    def test_quantity_must_be_positive(self):
+        item = FridgeItem(
+            quantity=0,
+            fridge=self.fridge,
+            product=self.product,
+        )
+        with self.assertRaises(ValidationError):
+            item.full_clean()
+
+    def test_item_is_deleted_with_fridge(self):
+        FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        self.fridge.delete()
+        self.assertEqual(FridgeItem.objects.count(), 0)
+
+    def test_item_is_deleted_with_product(self):
+        FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        self.product.delete()
+        self.assertEqual(FridgeItem.objects.count(), 0)
+
+    def test_item_is_unique(self):
+        FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        item2 = FridgeItem(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        with self.assertRaises(ValidationError):
+            item2.full_clean()
+
+    def test_item_str(self):
+        product = FridgeItem.objects.create(
+            fridge=self.fridge,
+            product=self.product,
+        )
+        self.assertEqual(str(product), f"Item Test Product in fridge Test Fridge")
