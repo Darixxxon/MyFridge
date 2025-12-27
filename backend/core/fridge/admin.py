@@ -30,6 +30,6 @@ class FridgeItemAdmin(admin.ModelAdmin):
     Admin class for the FridgeItem model.
     """
 
-    list_display = ("fridge__name", "product__name", "quantity", "expiration_date")
-    search_fields = ("fridge__name", "product__name"),
-    list_filter = ("fridge__name",)
+    list_display = ("fridge", "product", "quantity", "expiration_date")
+    search_fields = ("fridge__name", "product__name")
+    list_filter = ("fridge",)

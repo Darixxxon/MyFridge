@@ -93,7 +93,7 @@ class FridgeItem(models.Model):
         on_delete=models.CASCADE,
         related_name='fridge_items',
         related_query_name='fridge_item',
-        help_text='Product f which type is the item'
+        help_text='Product of which type is the item'
     )
 
     class Meta:
