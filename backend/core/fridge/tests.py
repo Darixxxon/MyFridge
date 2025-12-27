@@ -225,7 +225,7 @@ class FridgeMembersModelTest(TestCase):
         membership.delete()
         self.assertEqual(FridgeMembers.objects.count(), 0)
 
-    def test_memberships_is_deleted_with_fridge(self):
+    def test_membership_is_deleted_with_fridge(self):
         FridgeMembers.objects.create(
             role="m",
             fridge=self.fridge,
@@ -234,7 +234,7 @@ class FridgeMembersModelTest(TestCase):
         self.fridge.delete()
         self.assertEqual(FridgeMembers.objects.count(), 0)
 
-    def test_memberships_is_deleted_with_member(self):
+    def test_membership_is_deleted_with_member(self):
         FridgeMembers.objects.create(
             role="m",
             fridge=self.fridge,
@@ -242,6 +242,15 @@ class FridgeMembersModelTest(TestCase):
         )
         self.user.delete()
         self.assertEqual(FridgeMembers.objects.count(), 0)
+
+    def test_incorrect_role_of_membership(self):
+        membership = FridgeMembers(
+            role="x",
+            fridge=self.fridge,
+            member=self.user
+        )
+        with self.assertRaises(ValidationError):
+            membership.full_clean()
 
     def test_membership_uniqueness(self):
         FridgeMembers.objects.create(
