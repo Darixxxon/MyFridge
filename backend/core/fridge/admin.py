@@ -41,5 +41,5 @@ class FridgeMembersAdmin(admin.ModelAdmin):
     """
 
     list_display = ("fridge", "member", "role")
-    search_fields = ("fridge__name", "member__name")
+    search_fields = ("fridge__name", "member__username")
     list_filter = ("fridge", "member", "role")

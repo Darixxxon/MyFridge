@@ -115,21 +115,30 @@ class FridgeMembers(models.Model):
         ("m", "Member"),
     ]
 
-    role = models.CharField(max_length=5, choices=ROLES, blank=False)
+    role = models.CharField(max_length=5, choices=ROLES, blank=False, default="m")
     created_at = models.DateTimeField(auto_now_add=True)
 
     fridge = models.ForeignKey(
         Fridge,
         on_delete=models.CASCADE,
-        related_name='memberships',
-        related_query_name='membership',
+        related_name='fridge_memberships',
+        related_query_name='fridge_membership',
         help_text='Membership to fridge',
     )
 
     member = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='members',
-        related_query_name='member',
+        related_name='fridge_memberships',
+        related_query_name='fridge_membership',
         help_text='User is the member',
     )
+
+    class Meta:
+        ordering = ('fridge__name',)
+        verbose_name = 'Fridge member'
+        verbose_name_plural = 'Fridge members'
+        unique_together = ('fridge', 'member')
+
+    def __str__(self):
+        return f"User {self.member.username} is member of fridge {self.fridge.name} as a {self.role}"
