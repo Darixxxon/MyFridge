@@ -147,14 +147,22 @@ class FridgeItemModelTest(TestCase):
         item.delete()
         self.assertEqual(FridgeItem.objects.count(), 0)
 
-    def test_quantity_must_be_positive(self):
+    def test_quantity_cannot_be_nonpositive(self):
         item = FridgeItem(
-            quantity=0,
+            quantity=Decimal("0"),
             fridge=self.fridge,
             product=self.product,
         )
         with self.assertRaises(ValidationError):
             item.full_clean()
+
+    def test_quantity_must_be_positive(self):
+        item = FridgeItem(
+            quantity=Decimal("0.01"),
+            fridge=self.fridge,
+            product=self.product,
+        )
+        item.full_clean()
 
     def test_item_is_deleted_with_fridge(self):
         FridgeItem.objects.create(
@@ -185,8 +193,8 @@ class FridgeItemModelTest(TestCase):
             item2.full_clean()
 
     def test_item_str(self):
-        product = FridgeItem.objects.create(
+        test = FridgeItem.objects.create(
             fridge=self.fridge,
             product=self.product,
         )
-        self.assertEqual(str(product), f"Item Test Product in fridge Test Fridge")
+        self.assertEqual(str(test), f"Item Test Product in fridge Test Fridge")
