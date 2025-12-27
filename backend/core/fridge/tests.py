@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from .models import Fridge, Product, FridgeItem
+from .models import Fridge, Product, FridgeItem, FridgeMembers
 
 
 class FridgeModelTest(TestCase):
@@ -194,3 +194,76 @@ class FridgeItemModelTest(TestCase):
             product=self.product,
         )
         self.assertEqual(str(item), f"Item Test Product in fridge Test Fridge")
+
+
+class FridgeMembersModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="test123",
+        )
+
+        self.fridge = Fridge.objects.create(
+            name="Test Fridge",
+            owner=self.user
+        )
+
+    def test_create_valid_membership(self):
+        FridgeMembers.objects.create(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        self.assertEqual(FridgeMembers.objects.count(), 1)
+
+    def test_delete_membership(self):
+        membership = FridgeMembers.objects.create(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        membership.delete()
+        self.assertEqual(FridgeMembers.objects.count(), 0)
+
+    def test_memberships_is_deleted_with_fridge(self):
+        FridgeMembers.objects.create(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        self.fridge.delete()
+        self.assertEqual(FridgeMembers.objects.count(), 0)
+
+    def test_memberships_is_deleted_with_member(self):
+        FridgeMembers.objects.create(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        self.user.delete()
+        self.assertEqual(FridgeMembers.objects.count(), 0)
+
+    def test_membership_uniqueness(self):
+        FridgeMembers.objects.create(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        membership = FridgeMembers(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        with self.assertRaises(ValidationError):
+            membership.full_clean()
+
+    def test_membership_str(self):
+        membership = FridgeMembers(
+            role="m",
+            fridge=self.fridge,
+            member=self.user
+        )
+        self.assertEqual(
+            str(membership),
+            f"User testuser is member of fridge Test Fridge as a Member"
+        )
