@@ -141,4 +141,4 @@ class FridgeMembers(models.Model):
         unique_together = ('fridge', 'member')
 
     def __str__(self):
-        return f"User {self.member.username} is member of fridge {self.fridge.name} as a {self.role}"
+        return f"User {self.member.username} is member of fridge {self.fridge.name} as a {self.get_role_display()}"
