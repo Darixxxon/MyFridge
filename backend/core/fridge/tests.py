@@ -188,18 +188,6 @@ class FridgeItemModelTest(TestCase):
         self.product.delete()
         self.assertEqual(FridgeItem.objects.count(), 0)
 
-    def test_item_is_unique(self):
-        FridgeItem.objects.create(
-            fridge=self.fridge,
-            product=self.product,
-        )
-        item2 = FridgeItem(
-            fridge=self.fridge,
-            product=self.product,
-        )
-        with self.assertRaises(ValidationError):
-            item2.full_clean()
-
     def test_item_str(self):
         item = FridgeItem.objects.create(
             fridge=self.fridge,

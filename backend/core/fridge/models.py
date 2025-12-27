@@ -100,12 +100,6 @@ class FridgeItem(models.Model):
         ordering = ('product__name',)
         verbose_name = 'Fridge Item'
         verbose_name_plural = 'Fridge Items'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['fridge', 'product'],
-                name='unique_product_in_fridge'
-            )
-        ]
 
     def __str__(self):
         return f"Item {self.product.name} in fridge {self.fridge.name}"
